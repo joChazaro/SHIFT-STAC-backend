@@ -7,6 +7,8 @@ import numpy as np
 import geopandas as gpd
 import os
 import warnings
+import zarr
+from datetime import datetime
 warnings.filterwarnings("ignore")
 
 def make_zarr(item, chunking, data_path, store_path):
@@ -16,8 +18,8 @@ def make_zarr(item, chunking, data_path, store_path):
     # NOTE: this path works if original data downloaded is not in folder_name == 'aviris_data'
     # If downloaded data is stored in folder_name == 'aviris_data' or similar, change path to 
     # igm_path = os.path.join(data_path, f"{item}_rdn_igm")
-    igm_path = f"{item}_rdn_igm"
-    #igm_path = os.path.join(data_path, f"{item}_rdn_igm")
+    # igm_path = f"{item}_igm"
+    igm_path = os.path.join(data_path, f"{item}_igm")
     igm = xr.open_dataset(igm_path, engine='rasterio')
 
     # Define easting, northing, elevation
@@ -42,8 +44,8 @@ def make_zarr(item, chunking, data_path, store_path):
     # Read the rfl file under L2a/
     # NOTE: this path works if original data downloaded is not in folder_name == 'aviris_data'
     # If downloaded data is stored in folder_name == 'aviris_data' or similar, change path to 
-    # rfl_path = os.path.join(data_path, f"{item}_rfl")
-    rfl_path = f"{item}_rfl"
+    rfl_path = os.path.join(data_path, f"{item}_rfl")
+    # rfl_path = f"{item}_rfl"
     rfl = xr.open_dataset(rfl_path, engine='rasterio')
 
     # Swap to be able to select based on wavelength
@@ -59,8 +61,8 @@ def make_zarr(item, chunking, data_path, store_path):
     # Read the rdn file under L1/
     # NOTE: this path works if original data downloaded is not in folder_name == 'aviris_data'
     # If downloaded data is stored in folder_name == 'aviris_data' or similar, change path to 
-    # rdn_path = os.path.join(data_path, f"{item}_rdn_v2z4_clip")
-    rdn_path = f"{item}_rdn_v2z4_clip"
+    # rdn_path = os.path.join(data_path, f"{item}_rdn_v2aa1_clip")
+    rdn_path = os.path.join(data_path, f"{item}_rdn_v2aa1_clip")
     rdn = xr.open_dataset(rdn_path, engine='rasterio')
 
     # Swap to be able to select based on wavelength
@@ -82,15 +84,20 @@ def make_zarr(item, chunking, data_path, store_path):
     # Chunk data
     if chunking is not None:
         merged = merged.chunk({'x':chunking[0], 'y':chunking[1], 'wavelength':chunking[2]})
+    
+    dt = datetime.now()
+    root = zarr.group()
+    root.attrs['version'] = 'v1'
+    root.attrs["last_updated_at"] = dt
 
     # Save to local store
     merged.to_zarr(store=store_path, mode='w', consolidated=True)
 
 def setup_opts():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--username', type=str, default='mdunn', help='username')
+    parser.add_argument('--username', type=str, default='jchazaro', help='username')
     # If wanting to save zarr archives in separate folder within working directory, modify folder_name and dataset_date
-    parser.add_argument('--folder_name', type=str, default='', help='data folder')
+    parser.add_argument('--folder_name', type=str, default='aviris_data', help='data folder')
     parser.add_argument('--dataset_date', type=str, default='', help='dataset date')
     parser.add_argument('--x_chunk', type=int, default=100, help='chunk size in x, set 0 for no chunking')
     parser.add_argument('--y_chunk', type=int, default=100, help='chunk size in y, set 0 for no chunking')
@@ -109,9 +116,9 @@ def main(opts):
 
     print(f'Making zarr for dataset: {dataset_date}, item: {item}...', flush=True)
     if chunking is None:
-        zarr_filepath = f'{item}_default.zarr'
+        zarr_filepath = f'{item}.zarr'
     else:
-        zarr_filepath = f'{item}_{chunking[0]:03d}-{chunking[1]:03d}-{chunking[2]:03d}.zarr'
+        zarr_filepath = f'{item}.zarr'
     store_path = f'/discover/nobackup/projects/SBG-DO/{username}/{folder_name}/{dataset_date}/{zarr_filepath}'
     print(f'Store path: {store_path}', flush=True)
 

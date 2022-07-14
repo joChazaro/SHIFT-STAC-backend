@@ -34,9 +34,9 @@ def main():
     # to get AVIRIS-NG datasets for a particular date automatically: 
     s3 = boto3.client('s3')
     Bucket = "dh-shift-curated"
-    Prefix = f'aviris/{dataset_date}'
+    Prefix = f'aviris/v1/{dataset_date}'
     kwargs = {'Bucket': Bucket, 'Prefix': Prefix}
-    substring = '100-100-100.zarr'
+    substring = '.zarr'
     links = []
     
     while True:
@@ -45,7 +45,7 @@ def main():
             if substring in obj['Key']:
                 key = obj['Key']
                 url = key[:key.index(substring)+ len(substring)]
-                zarr = url.replace(f"aviris/{dataset_date}/", "")
+                zarr = url.replace(f"aviris/v1/{dataset_date}/", "")
                 item_name = zarr[:zarr.index(substring)-1]
                 links.append(str(item_name))
             

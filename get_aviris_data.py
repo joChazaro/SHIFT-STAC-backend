@@ -9,10 +9,10 @@ igm.hdr, rdn, & rdn.hdr files. For L2a files, we need rfl & rfl.hdr.
 '''
 
 def get_L1(flight_path, dataset_date):
-    igm_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v0/{dataset_date}/L1/igm/{flight_path}_rdn_igm"
-    rdn_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v0/{dataset_date}/L1/rdn/{flight_path}_rdn_v2z4_clip"
-    igm_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v0/{dataset_date}/L1/igm/{flight_path}_rdn_igm.hdr"
-    rdn_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v0/{dataset_date}/L1/rdn/{flight_path}_rdn_v2z4_clip.hdr"
+    igm_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_rdn_igm"
+    rdn_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip"
+    igm_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_rdn_igm.hdr"
+    rdn_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip.hdr"
 
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %igm_url)
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %igm_hdr_url)
@@ -20,22 +20,38 @@ def get_L1(flight_path, dataset_date):
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rdn_hdr_url)
     
 def get_L2(flight_path, dataset_date):
-    rfl_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v0/{dataset_date}/L2a/{flight_path}_rfl"
-    rfl_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v0/{dataset_date}/L2a/{flight_path}_rfl.hdr"
+    rfl_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L2a/{flight_path}_rfl"
+    rfl_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L2a/{flight_path}_rfl.hdr"
 
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rfl_url)
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rfl_hdr_url)
 
-dates = ['20220224', '20220228', '20220308', '20220316', '20220322', '20220405', '20220412']
+dates = [
+    '20220224',
+    '20220228',
+    '20220308',
+    '20220316',
+    '20220318',
+    '20220322',
+    '20220405',
+    '20220412',
+    '20220420',
+    '20220429',
+    '20220503',
+    '20220511',
+    '20220512',
+    '20220517',
+    '20220529'
+    ]
 dataset_date = sys.argv[1]
 flight_path = sys.argv[2]
 data = sys.argv[3]
 
 s3 = boto3.client('s3')
 Bucket = "dh-shift-curated"
-Prefix = f'aviris/{dataset_date}'
+Prefix = f'aviris/v1/{dataset_date}'
 kwargs = {'Bucket': Bucket, 'Prefix': Prefix}
-substring = '100-100-100.zarr'
+substring = '.zarr'
 links = []
 while True:
     objects = s3.list_objects_v2(**kwargs)
