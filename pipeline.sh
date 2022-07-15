@@ -1,5 +1,10 @@
 #!/usr/bin/bash
 
+### Unset AWS MFA so that your program doesnt crash if already set
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_SESSION_TOKEN
+
 ### Run AWS MFA script
 source aws_mfa.sh
 echo "AWS MFA configured "
@@ -49,6 +54,7 @@ read -p "Choose date to get data from of format YYYYMMDD [YYYYMMDD]: "  dataset_
 read -p "Choose flight path of format angYYYYMMDDtHHNNSS, or 'all' for all flight paths [angYYYYMMDDtHHNNSS/all]: " flight_path
 read -p "Download 'all' data, 'L1' data only, or 'L2' data only? [all/L1/L2]: " data
 read -p "Choose data version to download. Options: v0 or v1 [v0/v1]: " data_version
+
 # If not already present, get data download script from s3
 FILE = get_aviris_data.py
 echo "Checking if get_aviris_data.py exists... "
