@@ -9,9 +9,9 @@ igm.hdr, rdn, & rdn.hdr files. For L2a files, we need rfl & rfl.hdr.
 '''
 
 def get_L1(flight_path, dataset_date):
-    igm_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_rdn_igm"
+    igm_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_igm"
     rdn_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip"
-    igm_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_rdn_igm.hdr"
+    igm_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_igm.hdr"
     rdn_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip.hdr"
 
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %igm_url)
@@ -59,7 +59,7 @@ while True:
         if substring in obj['Key']:
             key = obj['Key']
             url = key[:key.index(substring)+ len(substring)]
-            zarr = url.replace(f"aviris/{dataset_date}/", "")
+            zarr = url.replace(f"aviris/v1/{dataset_date}/", "")
             item_name = zarr[:zarr.index(substring)-1]
             links.append(str(item_name))
 
