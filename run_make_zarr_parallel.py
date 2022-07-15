@@ -62,22 +62,21 @@ def main():
                                         x_chunk, y_chunk, wavelength_chunk, item)
         call(["sbatch", slurm_path])
         
-'''
-# To manually change AVIRIS data, modify this zarr list 
-    aviris_data = [
-            'ang20220308t211733',
-            'ang20220308t190523',
-            'ang20220308t202617',
-            'ang20220308t201508',
-            'ang20220308t214629',
-            'ang20220308t204043',
-            'ang20220308t191151',
-            'ang20220308t194253',
-            'ang20220308t213310',
-            'ang20220308t195648',
-            'ang20220308t192816'
-    ]
-'''
+
+# # To manually change AVIRIS data, modify this zarr list 
+#     aviris_data = [
+#             'ang20220308t211733',
+#             'ang20220308t190523',
+#             'ang20220308t202617',
+#             'ang20220308t201508',
+#             'ang20220308t214629',
+#             'ang20220308t204043',
+#             'ang20220308t191151',
+#             'ang20220308t194253',
+#             'ang20220308t213310',
+#             'ang20220308t195648',
+#             'ang20220308t192816'
+#     ]
 
 if __name__ == '__main__':
     main()

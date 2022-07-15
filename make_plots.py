@@ -42,18 +42,18 @@ def get_s3_keys(bucket, prefix):
 
 
 def get_zarrs(Bucket, dataset_date):
-    Prefix = f"aviris/{dataset_date}/"
+    Prefix = f"aviris/v1/{dataset_date}/"
     urls = list(get_s3_keys(bucket=Bucket, prefix=Prefix))
     s3_key = os.path.join(Bucket, Prefix)
     s3_url = os.path.join("s3://", s3_key)
     
-    substring = "100-100-100.zarr"
+    substring = ".zarr"
     links = []
 
     for link in urls:
         if substring in link:
             url = link[:link.index(substring) + len(substring)]
-            zarr = url.replace(f"aviris/{dataset_date}/", "")
+            zarr = url.replace(f"aviris/v1/{dataset_date}/", "")
             links.append(str(zarr))
             
     data_set = set(links)
@@ -64,7 +64,7 @@ def get_zarrs(Bucket, dataset_date):
 def make_plots(dataset_date, zarr):  
 
     print("Starting plots")
-    Prefix = f"aviris/{dataset_date}/{zarr}"
+    Prefix = f"aviris/v1/{dataset_date}/{zarr}"
     s3_key = os.path.join(Bucket, Prefix)
     s3_url = os.path.join("s3://", s3_key)
     
