@@ -31,7 +31,7 @@ echo "Using Python: $(which python) "
 
 ### Check if requirements file already exists. # If not already present, get from GitHub
 FILE = requirements.txt
-echo "Checking if requirements.txt exists... "
+echo "Checking if "$FILE" exists... "
 if [ -f "$FILE" ]; then
     echo "requirements.txt found "
     echo "Installing packages"
@@ -40,14 +40,14 @@ else
     echo "requirements.txt not found, downloading from Github "
     wget --no-check-certificate --content-disposition https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/requirements.txt
     ### Install all the necessary packages
-    echo "Installing packages "
+    echo "Installing packages."
     python3 -m pip install -r requirements.txt
 fi
 
 ### Download flight path data
-read -p dataset_date echo "Choose date to get data from of format YYYYMMDD [YYYYMMDD]: "
-read -p flight_path echo "Choose flight path of format angYYYYMMDDtHHNNSS, or 'all' for all flight paths [angYYYYMMDDtHHNNSS/all]: "
-read -p data "Download 'all' data, 'L1' data only, or 'L2' data only? [all/L1/L2]: "
+read -p "Choose date to get data from of format YYYYMMDD [YYYYMMDD]: "  dataset_date
+read -p "Choose flight path of format angYYYYMMDDtHHNNSS, or 'all' for all flight paths [angYYYYMMDDtHHNNSS/all]: " flight_path
+read -p "Download 'all' data, 'L1' data only, or 'L2' data only? [all/L1/L2]: " data
 
 # If not already present, get data download script from s3
 FILE = get_aviris_data.py
@@ -96,5 +96,5 @@ python3 run_make_zarr_parrallel.py "$dataset_date" "$username"
 
 # change datapath to where zarr data is stored
 # i.e. $ aws s3 cp --recursive /local/path s3://bucket/key/<dataset name>
-aws s3 cp --recursive aviris_data/"$dataset_date"/* s3://dh-shift-curated/aviris/v1/"$dataset_date"/  --exclude'*' --include'.zarr/'
+aws s3 cp aviris_data/"$dataset_date"/* s3://dh-shift-curated/aviris/v1/"$dataset_date"/  --exclude'*' --include'.zarr/' --recursive
 echo "*** End time: $(date) *** "
