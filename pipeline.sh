@@ -33,11 +33,11 @@ echo "Using Python: $(which python) "
 FILE = requirements.txt
 echo "Checking if "$FILE" exists... "
 if [ -f "$FILE" ]; then
-    echo "requirements.txt found "
+    echo "$FILE found "
     echo "Installing packages"
     python3 -m pip install -r requirements.txt
 else
-    echo "requirements.txt not found, downloading from Github "
+    echo "$FILE not found, downloading from Github "
     wget --no-check-certificate --content-disposition https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/requirements.txt
     ### Install all the necessary packages
     echo "Installing packages."
@@ -53,12 +53,12 @@ read -p "Download 'all' data, 'L1' data only, or 'L2' data only? [all/L1/L2]: " 
 FILE = get_aviris_data.py
 echo "Checking if get_aviris_data.py exists... "
 if [ -f "$FILE" ]; then
-    echo "get_aviris_data.py found "
+    echo "$FILE found "
     echo "Download data now "
     python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data"
     echo "Download complete "
 else
-    echo "get_aviris_data.py not found, downloading from Github "
+    echo "$FILE not found, downloading from Github "
     wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/get_aviris_data.py
     echo "Download data now "
     python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data"
