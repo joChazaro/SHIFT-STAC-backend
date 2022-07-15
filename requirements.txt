@@ -1,4 +1,3 @@
-# python>=3.8 # not needed if on SMCE
 boto3
 cartopy
 dask>=2.14.0
