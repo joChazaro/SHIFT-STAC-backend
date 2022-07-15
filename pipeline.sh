@@ -12,12 +12,12 @@ cd /discover/nobackup/projects/SBG-DO/jchazaro/$folder
 ### Check if virtual environment already exists. If not, create it.
 # venv is already loaded as part of NCCS
 env = /shift_env
-echo "Checking if virtual environment 'shift-env' exists... "
+echo "Checking if virtual environment 'shift_env' exists... "
 if [ -d "$env" ]; then
     # activate desired venv
     source shift_env/bin/activate
 else
-    echo "Virtual environment 'shift-env' does not exist, creating now. "
+    echo "Virtual environment 'shift_env' does not exist, creating now. "
     # create venv
     python3 -m venv shift_env
     # activate desired venv
