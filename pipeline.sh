@@ -12,11 +12,11 @@ echo "AWS MFA configured "
 ### Change to desired location (working directory)
 echo "Change to working directory "
 read -p "Enter folder in /discover/nobackup/projects/SBG-DO/: " folder
-cd /discover/nobackup/projects/SBG-DO/$folder
+cd /discover/nobackup/projects/SBG-DO/$folder/
 
 ### Check if virtual environment already exists. If not, create it.
 # venv is already loaded as part of NCCS
-env = /shift_env
+env=./shift_env
 echo "Checking if virtual environment 'shift_env' exists... "
 if [ -d "$env" ]; then
     # activate desired venv
@@ -38,7 +38,7 @@ echo "Module wget 1.20.3 loaded "
 
 
 ### Check if requirements file already exists. # If not already present, get from GitHub
-FILE=/requirements.txt
+FILE=./requirements.txt
 echo "Checking if "$FILE" exists... "
 if [ -f "$FILE" ]; then
     echo "$FILE found "
@@ -46,7 +46,7 @@ if [ -f "$FILE" ]; then
     python3 -m pip install -r requirements.txt
 else
     echo "$FILE not found, downloading from Github "
-    wget --no-check-certificate --content-disposition https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/requirements.txt
+    wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/joChazaro/SHIFT-STAC-backend/main/requirements.txt    
     ### Install all the necessary packages
     echo "Installing packages."
     python3 -m pip install -r requirements.txt
@@ -59,7 +59,7 @@ read -p "Download 'all' data, 'L1' data only, or 'L2' data only? [all/L1/L2]: " 
 read -p "Choose data version to download. Options: v0 or v1 [v0/v1]: " data_version
 
 # If not already present, get data download script from s3
-FILE=/get_aviris_data.py
+FILE=./get_aviris_data.py
 echo "Checking if get_aviris_data.py exists... "
 if [ -f "$FILE" ]; then
     echo "$FILE found "
@@ -68,39 +68,39 @@ if [ -f "$FILE" ]; then
     echo "Download complete "
 else
     echo "$FILE not found, downloading from Github "
-    wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/get_aviris_data.py
+    wget --no-check-certificate --content-disposition  https://raw.githubusercontent.com/joChazaro/SHIFT-STAC-backend/main/get_aviris_data.py
     echo "Download data now "
     python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data" "$data_version"
     echo "Download complete "
 fi
 
 # Check for zarr creation scripts. If not already present, download zarr creation scripts from GitHub
-FILE=/make_zarr.py
+FILE=./make_zarr.py
 echo "Checking for zarr creation scripts "
 if [ -f "$FILE" ]; then
     echo "make_zarr.py found "
 else
     echo "make_zarr.py not found, downloading from Github "
-    wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/make_zarr.py
+    wget --no-check-certificate --content-disposition  https://raw.githubusercontent.com/joChazaro/SHIFT-STAC-backend/main/make_zarr.py
     echo "make_zarr.py downloaded "
 fi
 
-FILE=/run_make_zarr_parallel.py
+FILE=./run_make_zarr_parallel.py
 if [ -f "$FILE" ]; then
     echo "run_make_zarr_parallel.py found"
 else
     echo "run_make_zarr_parallel.py not found, downloading from Github"
-    wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/run_make_zarr_parallel.py
+    wget --no-check-certificate --content-disposition  https://raw.githubusercontent.com/joChazaro/SHIFT-STAC-backend/main/run_make_zarr_parallel.py
     echo "run_make_zarr_parallel.py downloaded"
 fi
 
-FILE=/run_template.sh
+FILE=./run_template.sh
 echo "Checking for run_template.sh script"
 if [ -f "$FILE" ]; then
     echo "$FILE found "
 else
     echo "$FILE not found, downloading from Github "
-    wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/run_template.sh
+    wget --no-check-certificate --content-disposition  https://raw.githubusercontent.com/joChazaro/SHIFT-STAC-backend/main/run_template.sh
     echo "$FILE downloaded "
 fi
 
@@ -111,9 +111,9 @@ echo "*** Start time: $(date) *** "
 # First edit appropriate variables in main() of run_make_zarr_parallel.py
 # Automatically writes a bash file for each flight path in dataset list & 
 # launches it as a Slurm job
-python3 run_make_zarr_parrallel.py "$dataset_date" "$username"
+python3 run_make_zarr_parallel.py "$dataset_date" "$username"
 
 # change datapath to where zarr data is stored
 # i.e. $ aws s3 cp --recursive /local/path s3://bucket/key/<dataset name>
-aws s3 cp aviris_data/"$dataset_date"/* s3://dh-shift-curated/aviris/v1/"$dataset_date"/  --exclude'*' --include'.zarr/' --recursive
+aws s3 cp aviris_data/"$dataset_date"/* s3://dh-shift-curated/aviris/"$data_version"/"$dataset_date"/  --exclude'*' --include'.zarr/' --recursive
 echo "*** End time: $(date) *** "
