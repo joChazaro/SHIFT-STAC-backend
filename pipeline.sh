@@ -6,12 +6,12 @@ echo "AWS MFA configured "
 
 ### Change to desired location (working directory)
 echo "Change to working directory "
-read -p folder "Enter folder in /discover/nobackup/projects/SBG-DO/: "
-cd /discover/nobackup/projects/SBG-DO/jchazaro/$folder
+read -p "Enter folder in /discover/nobackup/projects/SBG-DO/: " folder
+cd /discover/nobackup/projects/SBG-DO/$folder
 
 ### Check if virtual environment already exists. If not, create it.
 # venv is already loaded as part of NCCS
-env = /shift_env
+env = shift_env
 echo "Checking if virtual environment 'shift_env' exists... "
 if [ -d "$env" ]; then
     # activate desired venv
@@ -85,7 +85,7 @@ else
     echo "run_make_zarr_parallel.py downloaded"
 fi
 
-read -p username echo "Enter NCCS username: "
+read -p "Enter NCCS username: " username
 
 ### Automate SLURM job to create georeferenced zarr archives for flight paths
 echo "*** Start time: $(date) *** "
