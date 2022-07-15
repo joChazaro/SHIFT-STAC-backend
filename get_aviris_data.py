@@ -8,20 +8,20 @@ have files that are required to make a Zarr archive. For L1 files, we need the i
 igm.hdr, rdn, & rdn.hdr files. For L2a files, we need rfl & rfl.hdr.
 '''
 
-def get_L1(flight_path, dataset_date):
-    igm_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_igm"
-    rdn_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip"
-    igm_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/igm/{flight_path}_igm.hdr"
-    rdn_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip.hdr"
+def get_L1(flight_path, dataset_date, data_version):
+    igm_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/{data_version}/{dataset_date}/L1/igm/{flight_path}_igm"
+    rdn_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/{data_version}/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip"
+    igm_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/{data_version}/{dataset_date}/L1/igm/{flight_path}_igm.hdr"
+    rdn_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/{data_version}/{dataset_date}/L1/rdn/{flight_path}_rdn_v2aa1_clip.hdr"
 
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %igm_url)
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %igm_hdr_url)
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rdn_url)
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rdn_hdr_url)
     
-def get_L2(flight_path, dataset_date):
-    rfl_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L2a/{flight_path}_rfl"
-    rfl_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/v1/{dataset_date}/L2a/{flight_path}_rfl.hdr"
+def get_L2(flight_path, dataset_date, data_version):
+    rfl_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/{data_version}/{dataset_date}/L2a/{flight_path}_rfl"
+    rfl_hdr_url = f"https://avng.jpl.nasa.gov/pub/SHIFT/{data_version}/{dataset_date}/L2a/{flight_path}_rfl.hdr"
 
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rfl_url)
     os.system('wget -b -nc -nd -nH -r -np --reject html %s' %rfl_hdr_url)
@@ -46,10 +46,10 @@ dates = [
 dataset_date = sys.argv[1]
 flight_path = sys.argv[2]
 data = sys.argv[3]
-
+data_version = sys.argv[4]
 s3 = boto3.client('s3')
 Bucket = "dh-shift-curated"
-Prefix = f'aviris/v1/{dataset_date}'
+Prefix = f'aviris/{data_version}/{dataset_date}'
 kwargs = {'Bucket': Bucket, 'Prefix': Prefix}
 substring = '.zarr'
 links = []
@@ -59,7 +59,7 @@ while True:
         if substring in obj['Key']:
             key = obj['Key']
             url = key[:key.index(substring)+ len(substring)]
-            zarr = url.replace(f"aviris/v1/{dataset_date}/", "")
+            zarr = url.replace(f"aviris/{data_version}/{dataset_date}/", "")
             item_name = zarr[:zarr.index(substring)-1]
             links.append(str(item_name))
 

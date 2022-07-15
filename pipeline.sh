@@ -48,20 +48,20 @@ fi
 read -p "Choose date to get data from of format YYYYMMDD [YYYYMMDD]: "  dataset_date
 read -p "Choose flight path of format angYYYYMMDDtHHNNSS, or 'all' for all flight paths [angYYYYMMDDtHHNNSS/all]: " flight_path
 read -p "Download 'all' data, 'L1' data only, or 'L2' data only? [all/L1/L2]: " data
-
+read -p "Choose data version to download. Options: v0 or v1 [v0/v1]: " data_version
 # If not already present, get data download script from s3
 FILE = get_aviris_data.py
 echo "Checking if get_aviris_data.py exists... "
 if [ -f "$FILE" ]; then
     echo "$FILE found "
     echo "Download data now "
-    python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data"
+    python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data" "$data_version"
     echo "Download complete "
 else
     echo "$FILE not found, downloading from Github "
     wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/get_aviris_data.py
     echo "Download data now "
-    python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data"
+    python3 get_aviris_data.py "$dataset_date" "$flight_path" "$data" "$data_version"
     echo "Download complete "
 fi
 
