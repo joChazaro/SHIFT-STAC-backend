@@ -85,6 +85,16 @@ else
     echo "run_make_zarr_parallel.py downloaded"
 fi
 
+FILE = run_template.sh
+echo "Checking for run_template.sh script"
+if [ -f "$FILE" ]; then
+    echo "$FILE found "
+else
+    echo "$FILE not found, downloading from Github "
+    wget --no-check-certificate --content-disposition  https://github.com/joChazaro/SHIFT-STAC-backend/blob/main/make_zarr.py
+    echo "$FILE downloaded "
+fi
+
 read -p "Enter NCCS username: " username
 
 ### Automate SLURM job to create georeferenced zarr archives for flight paths
