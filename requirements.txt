@@ -1,25 +1,25 @@
 boto3
-cartopy
+# cartopy
 dask>=2.14.0
-earthpy
+# earthpy
 fiona
 fsspec>=0.8.4
-GDAL>=3.4.2
-geopandas
-geoviews
+GDAL>=3.0.4
+# geopandas
+# geoviews
 h5py
-holoviews
-hvplot
+# holoviews
+# hvplot
 jsonschema==3.2.0
-jupyterlab
-matplotlib
+# jupyterlab
+# matplotlib
 notebook
-numcodecs
+# numcodecs
 numpy>=1.18
 packaging>=20.0
 pandas>=1.1
 pathlib2==2.3.6
-pooch
+# pooch
 proj
 pyproj
 pystac>=1.2.0
@@ -27,6 +27,6 @@ rasterio
 requests==2.25
 rioxarray
 s3fs
-shapely
+# shapely
 xarray
 zarr>=2.4.0

@@ -12,7 +12,7 @@ set -e
 # Loading the required module
 module load vim/8.1.2233
 module load nano/2.6.3
-module load python/GEOSpyD/Min4.10.3_py3.9
+module load python/GEOSpyD/Min4.11.0_py3.9
 module load gdal/3.0.4
 module load wget/1.20.3
 echo "Using Python: $(which python)"
